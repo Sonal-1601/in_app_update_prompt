@@ -72,10 +72,12 @@ class InAppUpdateState extends State<InAppUpdate> {
     final theme = widget.theme ?? InAppUpdatePromptTheme.of(context);
     switch (updateType) {
       case UpdateType.flexible:
-        theme.onFlexibleUpdate(context, widget.navigatorKey, await _fetchUpdateUrl(theme));
+        theme.onFlexibleUpdate(
+            context, widget.navigatorKey, await _fetchUpdateUrl(theme));
         break;
       case UpdateType.immediate:
-        theme.onImmediateUpdate(context, widget.navigatorKey, await _fetchUpdateUrl(theme));
+        theme.onImmediateUpdate(
+            context, widget.navigatorKey, await _fetchUpdateUrl(theme));
         break;
       default:
       // do nothing
