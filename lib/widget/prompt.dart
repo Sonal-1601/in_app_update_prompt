@@ -8,11 +8,13 @@ class InAppUpdate extends StatefulWidget {
   const InAppUpdate({
     super.key,
     required this.child,
+    this.navigatorKey,
     required this.notifier,
     this.theme,
   });
 
   final Widget child;
+  final GlobalKey<NavigatorState>? navigatorKey;
   final UpdateTypeNotifier notifier;
   final InAppUpdatePromptThemeData? theme;
 
@@ -45,6 +47,7 @@ class InAppUpdateState extends State<InAppUpdate> {
   }
 
   void resolve() async {
+    _logger.info('resolving update type from notifier');
     try {
       await widget.notifier.resolve();
     } catch (e, s) {
@@ -64,14 +67,15 @@ class InAppUpdateState extends State<InAppUpdate> {
 
   void onUpdateTypeChange() async {
     final updateType = widget.notifier.value;
+    _logger.info('onUpdateTypeChange from notifier: $updateType');
     if (!mounted) return;
     final theme = widget.theme ?? InAppUpdatePromptTheme.of(context);
     switch (updateType) {
       case UpdateType.flexible:
-        theme.onFlexibleUpdate(context, await _fetchUpdateUrl(theme));
+        theme.onFlexibleUpdate(context, widget.navigatorKey, await _fetchUpdateUrl(theme));
         break;
       case UpdateType.immediate:
-        theme.onImmediateUpdate(context, await _fetchUpdateUrl(theme));
+        theme.onImmediateUpdate(context, widget.navigatorKey, await _fetchUpdateUrl(theme));
         break;
       default:
       // do nothing

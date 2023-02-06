@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:url_launcher/url_launcher.dart';
 
 void showDefaultImmediateUpdateSnackbar(
   BuildContext context,
+  GlobalKey<NavigatorState>? navigatorKey,
   Uri? updateUrl,
 ) {
   showDialog(
     barrierDismissible: false,
-    context: context,
+    context: navigatorKey?.currentState?.context ?? context,
     builder: (BuildContext context) => WillPopScope(
       onWillPop: () => Future.value(false),
       child: ImmediateUpdateDialog(
@@ -26,7 +28,10 @@ class ImmediateUpdateDialog extends StatelessWidget {
     final url = updateUrl;
     if (url == null) return null;
     if (await url_launcher.canLaunchUrl(url)) {
-      await url_launcher.launchUrl(url);
+      await url_launcher.launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
     }
   }
 

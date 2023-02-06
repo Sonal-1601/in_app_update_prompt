@@ -4,7 +4,10 @@ import 'widget/flexible_update.dart';
 import 'widget/immediate_update.dart';
 
 typedef OnUpdatePromptCallback = void Function(
-    BuildContext context, Uri? updateUrl);
+  BuildContext context,
+  GlobalKey<NavigatorState>? navigatorKey,
+  Uri? updateUrl,
+);
 typedef GetUpdateUrlCallback = Future<Uri?> Function(BuildContext context);
 
 class InAppUpdatePromptThemeData

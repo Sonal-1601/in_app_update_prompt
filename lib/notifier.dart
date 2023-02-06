@@ -3,8 +3,6 @@ import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-export 'package:pub_semver/pub_semver.dart';
-
 enum UpdateType {
   undetermined,
   none,
@@ -63,10 +61,6 @@ class UpdateTypeNotifier extends ValueNotifier<UpdateType> {
   }
 
   Future<void> resolve() async {
-    if (value == UpdateType.undetermined) {
-      notifyListeners();
-      return;
-    }
     final updateType = await getUpdateType();
     value = updateType;
   }

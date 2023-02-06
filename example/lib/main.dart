@@ -1,17 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_update_prompt/in_app_update_prompt.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  final logger = Logger('');
+  logger.onRecord.listen((record) {
+    debugPrint(record.object?.toString() ?? record.message);
+    if (record.level >= Level.WARNING) {
+      debugPrintStack(stackTrace: record.stackTrace);
+    }
+  });
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+const exampleImmediateVersion = '1.1.0';
+const exampleFlexibleVersion = '1.1.0';
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late UpdateTypeNotifier notifier;
+  late GlobalKey<NavigatorState> _navigatorKey;
+
+  @override
+  void initState() {
+    super.initState();
+    notifier = UpdateTypeNotifier(
+      getFlexibleVersion: () => Future.value(exampleFlexibleVersion),
+      getImmediateVersion: () => Future.value(exampleImmediateVersion),
+    );
+    _navigatorKey = GlobalKey();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    notifier.dispose();
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      navigatorKey: _navigatorKey,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,6 +62,19 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      builder: (context, child) {
+        return InAppUpdatePromptTheme(
+          data: InAppUpdatePromptThemeData.defaultTheme().copyWith(
+            getUpdateUrl: (context) =>
+                Future.value(Uri.parse('https://example.com')),
+          ),
+          child: InAppUpdate(
+            navigatorKey: _navigatorKey,
+            notifier: notifier,
+            child: child ?? const SizedBox(),
+          ),
+        );
+      },
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
