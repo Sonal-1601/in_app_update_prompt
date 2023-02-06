@@ -1,3 +1,5 @@
 library in_app_update_prompt;
 
-export 'package:in_app_update_prompt/prompt.dart';
+export 'widget/widget.dart';
+export 'notifier.dart';
+export 'theme.dart';
