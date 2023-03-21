@@ -27,7 +27,7 @@ void showDefaultFlexibleUpdateSnackbar(
     behavior: SnackBarBehavior.floating,
     duration: const Duration(seconds: 10),
     content: const Text(
-      'New version is available',
+      'New update is available',
     ),
     action: action,
   );
