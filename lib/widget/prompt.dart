@@ -11,12 +11,14 @@ class InAppUpdate extends StatefulWidget {
     this.navigatorKey,
     required this.notifier,
     this.theme,
+    this.checkUpdatesImmediately = true,
   });
 
   final Widget child;
   final GlobalKey<NavigatorState>? navigatorKey;
   final UpdateTypeNotifier notifier;
   final InAppUpdatePromptThemeData? theme;
+  final bool checkUpdatesImmediately;
 
   @override
   State<InAppUpdate> createState() => InAppUpdateState();
@@ -29,9 +31,11 @@ class InAppUpdateState extends State<InAppUpdate> {
   void initState() {
     super.initState();
     widget.notifier.addListener(onUpdateTypeChange);
-    Future(() {
-      resolve();
-    });
+    if (widget.checkUpdatesImmediately) {
+      Future(() {
+        resolve();
+      });
+    }
   }
 
   @override
